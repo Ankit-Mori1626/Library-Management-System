@@ -49,8 +49,8 @@ pipeline{
                 ])
                 {
                     sh '''
-                    echo "$docker_pass" | docker login -u "$docker_user" --password-stdin
-                    docker push "$docker_user"/${FIMAGE_NAME}
+                    echo $docker_pass | docker login -u $docker_user --password-stdin
+                    docker push $docker_user/${FIMAGE_NAME}
                     '''
                 }
             }
@@ -67,15 +67,15 @@ pipeline{
         stage('Push frontend docker image to docker hub'){
             steps{
                 withCredentials([
-                  UsernamePassword(
+                  usernamePassword(
                     credentialsId : 'userlibrary'
-                    usernamevariable : 'docker_user'
-                    passwordvariable : 'docker_pass'
+                    usernameVariable : 'docker_user'
+                    passwordVariable : 'docker_pass'
                   )
                 ])
                 {
                     sh '''
-                    echo $docker_pass | docker login -u docker_user --password-stdin
+                    echo $docker_pass | docker login -u $docker_user --password-stdin
                     docker push $docker_user/${BIMAGE_NAME}
                     '''
                 }
