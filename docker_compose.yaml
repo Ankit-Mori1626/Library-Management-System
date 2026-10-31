@@ -1,0 +1,36 @@
+services:
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: library-frontend
+    container_name : librarymanagementfrontend
+    ports : 
+     - "5173:5173"
+    networks : 
+     - library
+
+  backend:
+    build:
+      context : ./server
+      dockerfile : Dockerfile
+    image : library-backend
+    container_name : librarymanagementbackend
+    ports :
+     - "5000:5000"
+    env_file :
+      - ./server/.env
+    networks :
+     - library
+
+  mongo:
+   image: mongo:latest
+   container_name : librarymongo
+   ports :
+    - "27017:27017"
+   networks :
+    - library
+  
+networks :
+  library :
+   driver : bridge
