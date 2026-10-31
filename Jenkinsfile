@@ -1,5 +1,5 @@
 pipeline{
-    agent {lable 'library'}
+    agent {label 'library'}
 
     environment{
         FIMAGE_NAME = "library-frontend"
