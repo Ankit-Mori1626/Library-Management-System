@@ -4,7 +4,10 @@ pipeline{
     environment{
         FIMAGE_NAME = "library-frontend"
         BIMAGE_NAME = "library-backend"
+    }
 
+    tools{
+        nodejs : 'nodejs'
     }
 
     stages{
