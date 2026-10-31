@@ -43,8 +43,8 @@ pipeline{
                 withCredentials([
                   UsernamePassword(
                     credentialsId : 'userlibrary',
-                    usernamevariable : 'docker_user',
-                    passwordvariable : 'docker_pass'
+                    usernameVariable : 'docker_user',
+                    passwordVariable : 'docker_pass'
                   )
                 ])
                 {
