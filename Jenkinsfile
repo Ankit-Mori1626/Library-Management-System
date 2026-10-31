@@ -41,7 +41,7 @@ pipeline{
         stage('Push frontend docker image to docker hub'){
             steps{
                 withCredentials([
-                  UsernamePassword(
+                  usernamePassword(
                     credentialsId : 'userlibrary',
                     usernameVariable : 'docker_user',
                     passwordVariable : 'docker_pass'
