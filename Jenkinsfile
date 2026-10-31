@@ -36,7 +36,7 @@ pipeline{
         stage('Docker build for frontend'){
             steps{
                 dir('client'){
-                    sh 'docker build -t  $docker_user/${FIMAGE_NAME} .'
+                    sh 'docker build -t ${FIMAGE_NAME} .'
                 }
             }
         }
@@ -62,7 +62,7 @@ pipeline{
         stage('Docker build for backend'){
             steps{
                 dir('server'){
-                    sh 'docker build -t  $docker_user/${BIMAGE_NAME} . '
+                    sh 'docker build -t ${BIMAGE_NAME} . '
                 }
             }
         }
