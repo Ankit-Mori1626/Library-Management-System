@@ -33,7 +33,7 @@ pipeline{
         stage('Docker build for frontend'){
             steps{
                 dir('client'){
-                    sh 'docker build -t ${FIMAGE_NAME} .'
+                    sh 'docker build -t  $docker_user/${FIMAGE_NAME} .'
                 }
             }
         }
@@ -58,13 +58,13 @@ pipeline{
 
         stage('Docker build for backend'){
             steps{
-                dir('client'){
-                    sh 'docker build -t ${BIMAGE_NAME} . '
+                dir('server'){
+                    sh 'docker build -t  $docker_user/${BIMAGE_NAME} . '
                 }
             }
         }
 
-        stage('Push frontend docker image to docker hub'){
+        stage('Push backend docker image to docker hub'){
             steps{
                 withCredentials([
                   usernamePassword(
