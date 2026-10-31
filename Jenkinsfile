@@ -49,8 +49,8 @@ pipeline{
                 ])
                 {
                     sh '''
-                    echo $docker_pass | docker login -u docker_user --password-stdin
-                    docker push $docker_user/${FIMAGE_NAME}
+                    echo "$docker_pass" | docker login -u "$docker_user" --password-stdin
+                    docker push "$docker_user"/${FIMAGE_NAME}
                     '''
                 }
             }
