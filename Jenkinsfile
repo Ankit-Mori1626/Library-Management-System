@@ -81,7 +81,7 @@ pipeline{
                     sh '''
                     echo $docker_pass | docker login -u $docker_user --password-stdin
                     docker tag ${BIMAGE_NAME}:${BUILD_NUMBER} "$docker_user/${BIMAGE_NAME}:${BUILD_NUMBER}"
-                    docker push $docker_user/${BIMAGE_NAME}${BUILD_NUMBER}:
+                    docker push $docker_user/${BIMAGE_NAME}:${BUILD_NUMBER}
                     '''
                 }
             }
