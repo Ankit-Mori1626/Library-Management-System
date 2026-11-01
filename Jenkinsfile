@@ -8,6 +8,7 @@ pipeline{
     environment{
         FIMAGE_NAME = "library-frontend"
         BIMAGE_NAME = "library-backend"
+        TAG=${BUILD_NUMBER}
     }
 
     stages{
@@ -68,13 +69,13 @@ pipeline{
                     sh 'rm -f server/.env'
                     sh 'cp "$SERVER_ENV"  server/.env'
                 }
-            }
+            }   
         }
 
         stage('Deploy application'){
             steps{
                 sh 'docker compose pull'
-                sh 'TAG=${BUILD_NUMBER} docker compose up -d'
+                sh 'docker compose up -d'
             }
         }
     }
