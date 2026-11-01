@@ -101,6 +101,7 @@ pipeline{
         stage('Deploy application'){
             steps{
                 sh 'docker compose pull'
+                sh 'docker compose down'
                 sh 'docker compose up -d'
             }
         }
