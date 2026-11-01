@@ -36,7 +36,7 @@ pipeline{
         stage('Docker build for frontend'){
             steps{
                 dir('client'){
-                    sh 'docker build -t ${FIMAGE_NAME} .'
+                    sh 'docker build -t ${FIMAGE_NAME}:${BUILD_NUMBER} .'
                 }
             }
         }
@@ -53,8 +53,8 @@ pipeline{
                 {
                     sh '''
                     echo $docker_pass | docker login -u $docker_user --password-stdin
-                    docker tag ${FIMAGE_NAME} "$docker_user/${FIMAGE_NAME}"
-                    docker push $docker_user/${FIMAGE_NAME}
+                    docker tag ${FIMAGE_NAME}:${BUILD_NUMBER} "$docker_user/${FIMAGE_NAME}:${BUILD_NUMBER}"
+                    docker push $docker_user/${FIMAGE_NAME}:${BUILD_NUMBER}
                     '''
                 }
             }
@@ -63,7 +63,7 @@ pipeline{
         stage('Docker build for backend'){
             steps{
                 dir('server'){
-                    sh 'docker build -t ${BIMAGE_NAME} . '
+                    sh 'docker build -t ${BIMAGE_NAME}:${BUILD_NUMBER} . '
                 }
             }
         }
@@ -80,8 +80,8 @@ pipeline{
                 {
                     sh '''
                     echo $docker_pass | docker login -u $docker_user --password-stdin
-                    docker tag ${BIMAGE_NAME} "$docker_user/${BIMAGE_NAME}"
-                    docker push $docker_user/${BIMAGE_NAME}
+                    docker tag ${BIMAGE_NAME}:${BUILD_NUMBER} "$docker_user/${BIMAGE_NAME}:${BUILD_NUMBER}"
+                    docker push $docker_user/${BIMAGE_NAME}${BUILD_NUMBER}:
                     '''
                 }
             }
