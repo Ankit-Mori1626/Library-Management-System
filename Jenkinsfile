@@ -79,4 +79,14 @@ pipeline{
             }
         }
     }
-}
+    
+    post{
+        always{
+            sh 'docker logout || true'
+            sh 'docker image prune -f'
+        }
+        failure{
+            echo 'Build failed , please check console output'
+            }
+        }
+    }
