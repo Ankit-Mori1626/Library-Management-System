@@ -44,12 +44,16 @@ async function lend(bookId, userId) {
 
 // ---- auth
 const sign = (payload, remember) => jwt.sign(payload, SECRET, { expiresIn: remember ? '30d' : '1d' });
-const session = (u, remember) => ({ token: sign({ id: u._id, role: u.role, name: u.name }, remember),
-  user: { name: u.name, email: u.email, role: u.role, studentId: u.studentId, department: u.department } });
+const session = (u, remember) => ({
+  token: sign({ id: u._id, role: u.role, name: u.name }, remember),
+  user: { name: u.name, email: u.email, role: u.role, studentId: u.studentId, department: u.department }
+});
 const same = (a, b) => { const x = Buffer.from(a), y = Buffer.from(b); return x.length === y.length && crypto.timingSafeEqual(x, y); };
 const sha = t => crypto.createHash('sha256').update(String(t)).digest('hex');
-const mailer = process.env.SMTP_HOST ? nodemailer.createTransport({ host: process.env.SMTP_HOST, port: +process.env.SMTP_PORT || 587,
-  secure: +process.env.SMTP_PORT === 465, auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } }) : null;
+const mailer = process.env.SMTP_HOST ? nodemailer.createTransport({
+  host: process.env.SMTP_HOST, port: +process.env.SMTP_PORT || 587,
+  secure: +process.env.SMTP_PORT === 465, auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+}) : null;
 async function sendMail(to, subject, text, html) {
   if (!mailer) return console.log(`\n[Email is not configured, so this is printed instead]\nTo: ${to}\n${text}\n`);
   await mailer.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to, subject, text, html });
@@ -78,11 +82,11 @@ app.post('/api/auth/forgot', w(async (q, s) => {
   const u = await User.findOne({ email: (q.body.email || '').trim().toLowerCase() });
   if (u) {
     const raw = crypto.randomBytes(32).toString('hex'), link = `${CLIENT_URL}/?reset=${raw}`;
-    u.resetHash = sha(raw); u.resetExpires = new Date(Date.now() + 36e5); await u.save();
+    u.resetHash = sha(raw); u.resetExpires = new Date(Date.now() + 10 * 60 * 1000 ); await u.save();
     try {
       await sendMail(u.email, 'Update your Stacks password',
-        `Hi ${u.name},\n\nUse this link to choose a new password (valid for 1 hour):\n${link}\n\nIf you did not ask for this, you can ignore this email.`,
-        `<p>Hi ${u.name},</p><p><a href="${link}">Update your password</a> (valid for 1 hour).</p><p>If you did not ask for this, you can ignore this email.</p>`);
+        `Hi ${u.name},\n\nUse this link to choose a new password (valid for 10 minutes):\n${link}\n\nIf you did not ask for this, you can ignore this email.`,
+        `<p>Hi ${u.name},</p><p><a href="${link}">Update your password</a> (valid for 10 minutes).</p><p>If you did not ask for this, you can ignore this email.</p>`);
     } catch (e) { console.error('Could not send reset email:', e.message); }
   }
   s.json({ message: 'If that email is registered, we have sent a link to update your password.' });
@@ -177,8 +181,10 @@ app.get('/api/users', auth('admin'), w(async (q, s) => {
   const [us, ls] = await Promise.all([User.find({ role: 'student' }).select('-password').sort('name'), Loan.find()]);
   s.json(us.map(u => {
     const mine = ls.filter(l => String(l.user) === String(u._id));
-    return { ...u.toObject(), active: mine.filter(l => !l.returnedAt).length,
-      owed: mine.filter(l => !l.finePaid).reduce((a, l) => a + (l.returnedAt ? l.fine : fineFor(l)), 0) };
+    return {
+      ...u.toObject(), active: mine.filter(l => !l.returnedAt).length,
+      owed: mine.filter(l => !l.finePaid).reduce((a, l) => a + (l.returnedAt ? l.fine : fineFor(l)), 0)
+    };
   }));
 }));
 app.put('/api/users/:id/block', auth('admin'), w(async (q, s) => {
@@ -190,7 +196,7 @@ app.get('/api/stats', auth('admin'), w(async (q, s) => {
     Loan.countDocuments({ returnedAt: null, dueAt: { $lt: new Date() } }),
     Book.aggregate([{ $group: { _id: '$genre', n: { $sum: '$copies' } } }, { $sort: { n: -1 } }]),
     Loan.aggregate([{ $group: { _id: '$book', n: { $sum: 1 } } }, { $sort: { n: -1 } }, { $limit: 5 },
-      { $lookup: { from: 'books', localField: '_id', foreignField: '_id', as: 'b' } }, { $unwind: '$b' }, { $project: { title: '$b.title', n: 1 } }]),
+    { $lookup: { from: 'books', localField: '_id', foreignField: '_id', as: 'b' } }, { $unwind: '$b' }, { $project: { title: '$b.title', n: 1 } }]),
   ]);
   s.json({ titles, students, out, overdue, genres, top });
 }));
