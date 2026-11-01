@@ -17,26 +17,24 @@ pipeline{
             }
         }
 
-        stage('Build the frontend'){
+        stage('Build the application'){
             steps{
                 dir('client'){
-                    sh 'npm install'
+                    sh 'npm ci'
                 }
-            }
-        }
-
-        stage('Build the backend'){
-            steps{
                 dir('server'){
-                    sh 'npm install'
+                    sh 'npm ci'
                 }
             }
         }
 
-        stage('Docker build for frontend'){
+        stage('Docker build '){
             steps{
                 dir('client'){
                     sh 'docker build -t ${FIMAGE_NAME}:${BUILD_NUMBER} .'
+                }
+                dir('server'){
+                    sh 'docker build -t ${BIMAGE_NAME}:${BUILD_NUMBER} . '
                 }
             }
         }
@@ -54,33 +52,8 @@ pipeline{
                     sh '''
                     echo $docker_pass | docker login -u $docker_user --password-stdin
                     docker tag ${FIMAGE_NAME}:${BUILD_NUMBER} "$docker_user/${FIMAGE_NAME}:${BUILD_NUMBER}"
-                    docker push $docker_user/${FIMAGE_NAME}:${BUILD_NUMBER}
-                    '''
-                }
-            }
-        }
-
-        stage('Docker build for backend'){
-            steps{
-                dir('server'){
-                    sh 'docker build -t ${BIMAGE_NAME}:${BUILD_NUMBER} . '
-                }
-            }
-        }
-
-        stage('Push backend docker image to docker hub'){
-            steps{
-                withCredentials([
-                  usernamePassword(
-                    credentialsId : 'userlibrary',
-                    usernameVariable : 'docker_user',
-                    passwordVariable : 'docker_pass'
-                  )
-                ])
-                {
-                    sh '''
-                    echo $docker_pass | docker login -u $docker_user --password-stdin
                     docker tag ${BIMAGE_NAME}:${BUILD_NUMBER} "$docker_user/${BIMAGE_NAME}:${BUILD_NUMBER}"
+                    docker push $docker_user/${FIMAGE_NAME}:${BUILD_NUMBER}
                     docker push $docker_user/${BIMAGE_NAME}:${BUILD_NUMBER}
                     '''
                 }
@@ -101,8 +74,7 @@ pipeline{
         stage('Deploy application'){
             steps{
                 sh 'docker compose pull'
-                sh 'docker compose down'
-                sh 'docker compose up -d'
+                sh 'TAG=${BUILD_NUMBER} docker compose up -d'
             }
         }
     }

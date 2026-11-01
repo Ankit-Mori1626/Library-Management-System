@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: yashkumarpalanpure/library-frontend:latest
+    image: yashkumarpalanpure/library-frontend:${TAG}
     container_name : librarymanagementfrontend
     ports : 
      - "5173:5173"
@@ -8,7 +8,7 @@ services:
      - library
 
   backend:
-    image : yashkumarpalanpure/library-backend:latest
+    image : yashkumarpalanpure/library-backend:${TAG}
     container_name : librarymanagementbackend
     ports :
      - "5000:5000"
@@ -28,3 +28,7 @@ services:
 networks :
   library :
    driver : bridge
+
+
+volumes:
+  mongo_data:
