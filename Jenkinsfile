@@ -92,6 +92,7 @@ pipeline{
                 withCredentials([
                     file(credentialsId:'libraryenv',variable:'SERVER_ENV')
                 ]){
+                    sh 'rm -f server/.env'
                     sh 'cp "$SERVER_ENV"  server/.env'
                 }
             }
