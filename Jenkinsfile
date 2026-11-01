@@ -8,7 +8,7 @@ pipeline{
     environment{
         FIMAGE_NAME = "library-frontend"
         BIMAGE_NAME = "library-backend"
-        TAG="{BUILD_NUMBER}"
+        TAG="${BUILD_NUMBER}"
     }
 
     stages{
