@@ -53,6 +53,7 @@ pipeline{
                 {
                     sh '''
                     echo $docker_pass | docker login -u $docker_user --password-stdin
+                    docker tag ${FIMAGE_NAME} "$docker_user/${FIMAGE_NAME}"
                     docker push $docker_user/${FIMAGE_NAME}
                     '''
                 }
