@@ -87,8 +87,19 @@ pipeline{
             }
         }
 
+        stage('ENV file configuration'){
+            steps{
+                withCredentials([
+                    file(credentialsId:'libraryenv',variable:'SERVER_ENV')
+                ]){
+                    sh 'cp "$SERVER_ENV"  server/.env'
+                }
+            }
+        }
+
         stage('Deploy application'){
             steps{
+                sh 'docker compose pull'
                 sh 'docker compose up -d'
             }
         }

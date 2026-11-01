@@ -1,9 +1,6 @@
 services:
   frontend:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    image: library-frontend
+    image: yashkumarpalanpure/library-frontend:latest
     container_name : librarymanagementfrontend
     ports : 
      - "5173:5173"
@@ -11,10 +8,7 @@ services:
      - library
 
   backend:
-    build:
-      context : ./server
-      dockerfile : Dockerfile
-    image : library-backend
+    image : yashkumarpalanpure/library-backend:latest
     container_name : librarymanagementbackend
     ports :
      - "5000:5000"
