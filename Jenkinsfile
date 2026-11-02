@@ -28,6 +28,17 @@ pipeline{
                 }
             }
         }
+        
+        stage('Unit testing'){
+            steps{
+                dir('client'){
+                    sh 'npm test'
+                }
+                dir('server'){
+                    sh 'npm test'
+                }
+            }
+        }
 
         stage('Docker Build and Push to Docker Hub'){
             steps{
