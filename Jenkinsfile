@@ -32,10 +32,10 @@ pipeline{
         stage('Docker build '){
             steps{
                 dir('client'){
-                    sh 'docker build -t $docker_user/${FIMAGE_NAME}:${BUILD_NUMBER} .'
+                    sh 'docker build -t ${docker_user}/${FIMAGE_NAME}:${BUILD_NUMBER} .'
                 }
                 dir('server'){
-                    sh 'docker build -t $docker_user/${BIMAGE_NAME}:${BUILD_NUMBER} . '
+                    sh 'docker build -t ${docker_user}/${BIMAGE_NAME}:${BUILD_NUMBER} . '
                 }
             }
         }
