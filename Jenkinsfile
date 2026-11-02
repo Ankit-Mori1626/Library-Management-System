@@ -74,8 +74,11 @@ pipeline{
 
         stage('Deploy application'){
             steps{
-                sh 'docker compose pull'
-                sh 'docker compose up -d'
+                sh '''
+                export TAG="${BUILD_NUMBER}"
+                docker compose pull
+                docker compose up -d --remove-orphans
+                '''
             }
         }
     }
