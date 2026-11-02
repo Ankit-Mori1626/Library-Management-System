@@ -1,5 +1,5 @@
 pipeline{
-    agent {label 'library'}
+    agent any
 
     tools{
         nodejs 'nodejs'
