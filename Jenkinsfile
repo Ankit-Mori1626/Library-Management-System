@@ -50,15 +50,15 @@ pipeline{
                   )
                 ])
                 {
-                sh '''
                     dir('client'){
-                        'docker build -t ${docker_user}/${FIMAGE_NAME}:${BUILD_NUMBER} .'
-                    }
-                    
-                    dir('server'){
-                       'docker build -t ${docker_user}/${BIMAGE_NAME}:${BUILD_NUMBER} . '
+                        sh 'docker build -t ${docker_user}/${FIMAGE_NAME}:${BUILD_NUMBER} .'
                     }
 
+                    dir('server'){
+                       sh 'docker build -t ${docker_user}/${BIMAGE_NAME}:${BUILD_NUMBER} .'
+                    }
+
+                    sh '''
                     echo $docker_pass | docker login -u $docker_user --password-stdin
                     docker push $docker_user/${FIMAGE_NAME}:${BUILD_NUMBER}
                     docker push $docker_user/${BIMAGE_NAME}:${BUILD_NUMBER}
