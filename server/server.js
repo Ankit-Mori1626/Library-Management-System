@@ -223,6 +223,10 @@ async function seed() {
   console.log('Sample books added');
 }
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/library')
-  .then(seed).then(() => app.listen(process.env.PORT || 5000, () => console.log('API ready on http://localhost:5000')))
-  .catch(e => { console.error('MongoDB connection failed:', e.message); process.exit(1); });
+// Start the server only when run directly (node server.js). Tests import `app` without starting it.
+if (require.main === module) {
+  mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/library')
+    .then(seed).then(() => app.listen(process.env.PORT || 5000, () => console.log('API ready on http://localhost:5000')))
+    .catch(e => { console.error('MongoDB connection failed:', e.message); process.exit(1); });
+}
+module.exports = { app, fineFor };

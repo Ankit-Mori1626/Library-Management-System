@@ -4,14 +4,29 @@
     "type": "module",
     "scripts": {
         "dev": "vite --host 0.0.0.0",
-        "build": "vite build"
+        "build": "vite build",
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "lint": "eslint .",
+        "test:ci": "vitest run --coverage --reporter=default --reporter=junit --outputFile.junit=test-results/junit.xml",
+        "audit:prod": "npm audit --omit=dev --audit-level=high"
     },
     "dependencies": {
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },
     "devDependencies": {
+        "@eslint/js": "^9.17.0",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.3.3",
         "@vitejs/plugin-react": "^4.3.1",
-        "vite": "^5.4.0"
+        "@vitest/coverage-v8": "^4.1.12",
+        "eslint": "^9.17.0",
+        "eslint-plugin-react": "^7.37.3",
+        "eslint-plugin-react-hooks": "^5.1.0",
+        "globals": "^15.14.0",
+        "jsdom": "^29.1.1",
+        "vite": "^5.4.0",
+        "vitest": "^4.1.12"
     }
 }
